@@ -1,0 +1,187 @@
+:root {
+  --color-brand--1: #ffb545;
+  --color-brand--2: #00c46a;
+
+  --color-dark--1: #234;
+  --color-dark--2: #42484d;
+  --color-light--1: #aaa;
+  --color-light--2: #ececec;
+  --color-light--3: #dedede;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--color-light--1);
+  font-weight: 400;
+  line-height: 1.6;
+  height: 100vh;
+  overscroll-behavior-y: none;
+
+  display: flex;
+}
+
+.sidebar {
+  flex-basis: 4rem;
+  background-color: var(--color-dark--1);
+  padding: 3rem 5rem 4rem 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#map {
+  flex: 1;
+  height: 100%;
+  background-color: var(--color-light--1);
+}
+
+#menu {
+  height: 100%;
+  /* position: fixed; */
+  background-color: var(--color-dark--2);
+  transition: 1000ms all cubic-bezier(0.19, 1, 0.22, 1);
+  flex-basis: 40rem;
+  transform: translateX(-84%);
+  /* left: 6rem; */
+}
+
+#menu.expanded {
+  transform: translateX(0%);
+  left: 0px;
+}
+
+.menu-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#blob {
+  top: 0;
+  z-index: -1;
+  right: 6rem;
+  transform: translateX(100%);
+  height: 100%;
+  position: absolute;
+}
+
+#blob-path {
+  height: 100%;
+  fill: var(--color-dark--1);
+}
+
+/*
+.hamburger {
+  right: 2rem;
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  margin-top: -1rem;
+}
+
+.hamburger .line {
+  width: 100%;
+  height: 4px;
+  background-color: #fff;
+  position: absolute;
+}
+
+.hamburger .line:nth-child(2) {
+  top: 50%;
+  margin-top: -2px;
+}
+
+.hamburger .line:nth-child(3) {
+  bottom: 0;
+}
+*/
+/* hamburger */
+.hamburger {
+  width: 3.5rem; /* 35 */
+  height: 3rem; /* 30 */
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+
+  right: 1.4rem;
+  position: absolute;
+  margin-top: -1rem;
+}
+.hamburger span {
+  background-color: #fff;
+  position: absolute;
+  border-radius: 2px;
+  transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+}
+.line1 {
+  width: 100%;
+  height: 4px;
+  display: block;
+  top: 0px;
+  left: 0px;
+}
+.line2 {
+  width: 100%;
+  height: 4px;
+  display: block;
+  top: 13px;
+  left: 0px;
+}
+.line3 {
+  width: 100%;
+  height: 4px;
+  display: block;
+  bottom: 0px;
+  left: 0px;
+}
+
+.hamburger.open {
+  transform: rotate(90deg);
+}
+
+.hamburger.open .line2 {
+  left: 3px;
+  top: 12px;
+  width: 30px;
+  transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+  /* transform: rotate(90deg); */
+  transition-delay: 300ms;
+}
+
+.hamburger.open .line1 {
+  left: 1px;
+  top: 19px;
+  width: 20px;
+  transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+  transform: rotate(45deg);
+  transition-delay: 100ms;
+}
+.hamburger.open .line3 {
+  left: 1px;
+  top: 6px;
+  width: 20px;
+  transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+  transform: rotate(-45deg);
+  transition-delay: 200ms;
+}
+
+.hamburger-container {
+  z-index: 100;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  width: 6.4rem;
+  height: 100%;
+  /* border-left: 2px solid #333; */
+  background-color: var(--color-dark--1);
+}
