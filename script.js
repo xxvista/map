@@ -16,26 +16,46 @@ window.addEventListener('DOMContentLoaded', function () {
   const innerMenu = document.querySelector('.menu-inner');
   const hamContainer = document.querySelector('.hamburger-container');
 
+  let isMobile = false;
+  hamContainer.addEventListener(
+    'touchstart',
+    e => {
+      isMobile = true;
+      hamburger.classList.toggle('open');
+      menu.classList.toggle('expanded');
+      menuExpanded = false;
+    },
+    false
+  );
+
   window.addEventListener('mousemove', function (e) {
     x = e.pageX;
     y = e.pageY;
   });
 
-  hamburger.addEventListener('mouseenter', function () {
-    this.classList.add('open');
-    menu.classList.add('expanded');
-    menuExpanded = true;
+  hamburger.addEventListener('mouseenter', function (e) {
+    e.stopPropagation();
+    if (!isMobile) {
+      if (e.clientX > 100) return;
+      this.classList.add('open');
+      menu.classList.add('expanded');
+      menuExpanded = true;
+    }
   });
 
-  hamContainer.addEventListener('mouseenter', function () {
-    hamburger.classList.add('open');
-    menu.classList.add('expanded');
-    menuExpanded = true;
+  hamContainer.addEventListener('mouseenter', function (e) {
+    e.stopPropagation();
+    if (!isMobile) {
+      if (e.clientX > 100) return;
+      hamburger.classList.add('open');
+      menu.classList.add('expanded');
+      menuExpanded = true;
+    }
   });
 
   hamContainer.addEventListener('click', function () {
-    hamburger.classList.remove('open');
-    menu.classList.remove('expanded');
+    hamburger.classList.toggle('open');
+    menu.classList.toggle('expanded');
     menuExpanded = false;
   });
 
@@ -45,6 +65,7 @@ window.addEventListener('DOMContentLoaded', function () {
     changeInValue,
     totalIterations
   ) {
+    if (isMobile) return;
     return (
       changeInValue *
         (-Math.pow(2, (-10 * currentIteration) / totalIterations) + 1) +
@@ -56,6 +77,7 @@ window.addEventListener('DOMContentLoaded', function () {
   let expandAmount = 20;
 
   function svgCurve() {
+    if (isMobile) return;
     if (curveX > x - 1 && curveX < x + 1) {
       xitteration = 0;
     } else {
@@ -117,7 +139,7 @@ window.addEventListener('DOMContentLoaded', function () {
     window.requestAnimationFrame(svgCurve);
   }
 
-  window.requestAnimationFrame(svgCurve);
+  if (!isMobile) window.requestAnimationFrame(svgCurve);
 });
 
 //////////////////////////////////////////////////////////////////
@@ -165,3 +187,12 @@ class App {
 }
 
 const app = new App();
+
+////////////////////////////////////////////////////////////////
+(searchInput = document.querySelector('input')),
+  (removeIcon = document.querySelector('.search span'));
+
+removeIcon.addEventListener('click', () => {
+  searchInput.value = '';
+  searchInput.focus();
+});

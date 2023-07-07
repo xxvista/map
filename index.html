@@ -11,6 +11,19 @@
 
     <link
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <link
+      rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
@@ -26,32 +39,62 @@
     <title>Map of Memories</title>
   </head>
   <body>
-    <div id="menu">
-      <!-- <div class="hamburger">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-      </div> -->
-      <div class="hamburger-container">
-        <div class="hamburger">
-          <span class="line1"></span>
-          <span class="line2"></span>
-          <span class="line3"></span>
+    <div class="menu-container">
+      <div id="menu">
+        <div class="hamburger-container">
+          <div class="hamburger">
+            <span class="line1"></span>
+            <span class="line2"></span>
+            <span class="line3"></span>
+          </div>
         </div>
-      </div>
-      <div class="menu-inner"></div>
 
-      <svg
-        version="1.1"
-        id="blob"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-      >
-        <path
-          id="blob-path"
-          d="M60,500H0V0h60c0,0,20,172,20,250S60,900,60,500z"
-        />
-      </svg>
+        <div class="menu-inner wrapper">
+          <div class="search">
+            <input
+              type="text"
+              placeholder="Search a word"
+              required
+              spellcheck="false"
+            />
+            <i class="fas fa-search"></i>
+            <span class="material-icons">close</span>
+          </div>
+          <!-- <li class="add-box">
+            <div class="icon"><i class="uil uil-plus"></i></div>
+            <p>Add new note</p>
+          </li> -->
+          <li class="note">
+            <div class="details">
+              <p>${note.title}</p>
+              <span>${filterDesc}</span>
+            </div>
+            <div class="bottom-content">
+              <span>${note.date}</span>
+              <div class="settings show">
+                <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                <ul class="menu">
+                  <li><i class="uil uil-pen"></i>Edit</li>
+                  <li><i class="uil uil-trash"></i>Delete</li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </div>
+
+        <svg
+          version="1.1"
+          id="blob"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <path
+            id="blob-path"
+            d="M60,500H0V0h60c0,0,20,172,20,250S60,900,60,500z"
+          />
+        </svg>
+      </div>
+      <div class="content">Content</div>
     </div>
 
     <div id="map"></div>
