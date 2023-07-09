@@ -12,21 +12,32 @@ window.addEventListener('DOMContentLoaded', function () {
   const blob = document.querySelector('#blob');
   const blobPath = document.querySelector('#blob-path');
   const hamburger = document.querySelector('.hamburger');
-  const menu = document.querySelector('#menu');
-  const innerMenu = document.querySelector('.menu-inner');
+  const menu = document.querySelector('.history');
+  const innerMenu = document.querySelector('.history__content');
   const hamContainer = document.querySelector('.hamburger-container');
+  const noteContainer = document.querySelector('.note-container');
 
   let isMobile = false;
-  hamContainer.addEventListener(
-    'touchstart',
-    e => {
-      isMobile = true;
-      hamburger.classList.toggle('open');
-      menu.classList.toggle('expanded');
-      menuExpanded = false;
-    },
-    false
-  );
+  //   isMobile = navigator.userAgentData.mobile; //resolves true/false
+  function detectMob() {
+    return window.innerWidth <= 800 && window.innerHeight <= 1000;
+  }
+
+  isMobile = detectMob();
+
+  if (typeof screen.orientation === 'undefined') isMobile = true;
+
+  //   hamContainer.addEventListener(
+  //     'touchstart',
+  //     e => {
+  //       isMobile = true;
+  //       hamburger.classList.toggle('open');
+  //       menu.classList.toggle('expanded');
+  //       // noteContainer.classList.toggle('show');
+  //       menuExpanded = false;
+  //     },
+  //     false
+  //   );
 
   window.addEventListener('mousemove', function (e) {
     x = e.pageX;
@@ -35,29 +46,32 @@ window.addEventListener('DOMContentLoaded', function () {
 
   hamburger.addEventListener('mouseenter', function (e) {
     e.stopPropagation();
-    if (!isMobile) {
-      if (e.clientX > 100) return;
-      this.classList.add('open');
-      menu.classList.add('expanded');
-      menuExpanded = true;
-    }
+    if (isMobile) return;
+    if (e.clientX > 100) return;
+    this.classList.add('open');
+    menu.classList.add('expanded');
+    //  noteContainer.classList.remove('show');
+    menuExpanded = true;
   });
 
   hamContainer.addEventListener('mouseenter', function (e) {
     e.stopPropagation();
-    if (!isMobile) {
-      if (e.clientX > 100) return;
-      hamburger.classList.add('open');
-      menu.classList.add('expanded');
-      menuExpanded = true;
-    }
+    if (isMobile) return;
+    if (e.clientX > 100) return;
+    hamburger.classList.add('open');
+    menu.classList.add('expanded');
+    //  noteContainer.classList.remove('show');
+    menuExpanded = true;
   });
 
   hamContainer.addEventListener('click', function () {
     hamburger.classList.toggle('open');
     menu.classList.toggle('expanded');
+    //  noteContainer.classList.toggle('show');
     menuExpanded = false;
   });
+
+  if (isMobile) return;
 
   function easeOutExpo(
     currentIteration,
@@ -65,7 +79,6 @@ window.addEventListener('DOMContentLoaded', function () {
     changeInValue,
     totalIterations
   ) {
-    if (isMobile) return;
     return (
       changeInValue *
         (-Math.pow(2, (-10 * currentIteration) / totalIterations) + 1) +
@@ -77,7 +90,6 @@ window.addEventListener('DOMContentLoaded', function () {
   let expandAmount = 20;
 
   function svgCurve() {
-    if (isMobile) return;
     if (curveX > x - 1 && curveX < x + 1) {
       xitteration = 0;
     } else {
@@ -139,7 +151,7 @@ window.addEventListener('DOMContentLoaded', function () {
     window.requestAnimationFrame(svgCurve);
   }
 
-  if (!isMobile) window.requestAnimationFrame(svgCurve);
+  window.requestAnimationFrame(svgCurve);
 });
 
 //////////////////////////////////////////////////////////////////
@@ -189,10 +201,16 @@ class App {
 const app = new App();
 
 ////////////////////////////////////////////////////////////////
-(searchInput = document.querySelector('input')),
-  (removeIcon = document.querySelector('.search span'));
 
+(searchInput = document.querySelector('.search__input')),
+  (removeIcon = document.querySelector('.search__close'));
+
+searchInput.addEventListener('keyup', () => {
+  if (searchInput.value !== '') removeIcon.classList.add('visible');
+  if (searchInput.value === '') removeIcon.classList.remove('visible');
+});
 removeIcon.addEventListener('click', () => {
   searchInput.value = '';
   searchInput.focus();
+  removeIcon.classList.remove('visible');
 });

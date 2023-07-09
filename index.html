@@ -39,64 +39,144 @@
     <title>Map of Memories</title>
   </head>
   <body>
-    <div class="menu-container">
-      <div id="menu">
-        <div class="hamburger-container">
-          <div class="hamburger">
-            <span class="line1"></span>
-            <span class="line2"></span>
-            <span class="line3"></span>
-          </div>
-        </div>
-
-        <div class="menu-inner wrapper">
-          <div class="search">
-            <input
-              type="text"
-              placeholder="Search a word"
-              required
-              spellcheck="false"
-            />
-            <i class="fas fa-search"></i>
-            <span class="material-icons">close</span>
-          </div>
-          <!-- <li class="add-box">
-            <div class="icon"><i class="uil uil-plus"></i></div>
-            <p>Add new note</p>
-          </li> -->
-          <li class="note">
-            <div class="details">
-              <p>${note.title}</p>
-              <span>${filterDesc}</span>
+    <main class="app">
+      <div class="temp"></div>
+      <div class="sidebar">
+        <div class="history">
+          <div class="hamburger-container">
+            <div class="hamburger">
+              <span class="line1"></span>
+              <span class="line2"></span>
+              <span class="line3"></span>
             </div>
-            <div class="bottom-content">
-              <span>${note.date}</span>
-              <div class="settings show">
-                <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
-                <ul class="menu">
-                  <li><i class="uil uil-pen"></i>Edit</li>
-                  <li><i class="uil uil-trash"></i>Delete</li>
-                </ul>
+          </div>
+
+          <div class="history__content">
+            <div class="search">
+              <input
+                type="text"
+                placeholder="Search for memory"
+                required
+                spellcheck="false"
+                class="search__input"
+              />
+              <i class="fas fa-search search__icon"></i>
+              <span class="material-icons search__close">close</span>
+            </div>
+
+            <div class="search-menu">
+              <ul class="search-menu__options">
+                <li class="search-menu__option search-menu__option--show">
+                  <a class="search-menu__link show-all" href="#">
+                    <i class="uil uil-eye"></i>
+                    <span>Show All</span>
+                  </a>
+                </li>
+                <li class="search-menu__option search-menu__option--delete">
+                  <a class="search-menu__link delte-all selected" href="#">
+                    <i class="uil uil-times-circle"></i>
+                    <span>Delete All</span>
+                  </a>
+                </li>
+                <li class="search-menu__option search-menu__option--sort">
+                  <a class="search-menu__link sort" href="#">
+                    <i class="uil uil uil-sort-amount-down"></i>
+                    <span>Sort (Time)</span>
+                  </a>
+                  <div class="search-menu-sort">
+                    <ul class="search-menu-sort__options">
+                      <li>
+                        <a
+                          class="search-menu-sort__option search-menu-sort__option--date"
+                          href="#"
+                        >
+                          <i class="uil uil-calender"></i>
+                          Sort by date
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          class="search-menu-sort__option search-menu-sort__option--title"
+                          href="#"
+                        >
+                          <i class="uil uil-letter-english-a"></i>
+                          Sort by title
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <li class="add-box">
+              <div class="icon"><i class="uil uil-plus"></i></div>
+              <p class="add-box__text">Add new note</p>
+            </li>
+
+            <li class="note">
+              <div class="details">
+                <p class="note__title">${note.title}</p>
+                <span class="note__desc">${filterDesc}</span>
               </div>
-            </div>
-          </li>
+              <div class="bottom-content">
+                <span class="note__date">${note.date}</span>
+                <div class="settings show">
+                  <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                  <ul class="menu">
+                    <li class="menu__option">
+                      <i class="uil uil-pen menu__icon"></i>Edit
+                    </li>
+                    <li class="menu__option">
+                      <i class="uil uil-trash"></i>Delete
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </div>
+
+          <svg
+            version="1.1"
+            id="blob"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <path
+              id="blob-path"
+              d="M60,500H0V0h60c0,0,20,172,20,250S60,900,60,500z"
+            />
+          </svg>
         </div>
 
-        <svg
-          version="1.1"
-          id="blob"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-        >
-          <path
-            id="blob-path"
-            d="M60,500H0V0h60c0,0,20,172,20,250S60,900,60,500z"
-          />
-        </svg>
+        <div class="main-side">
+          <div class="logo-box">
+            <img src="img/MemoMap-logo-white (1).png" alt="Logo" class="logo" />
+          </div>
+        </div>
       </div>
-      <div class="content">Content</div>
-    </div>
 
-    <div id="map"></div>
+      <div id="map"></div>
+
+      <div class="note-container show">
+        <div class="add-note">
+          <header class="add-note__header">
+            <p class="header__title">Add new note</p>
+            <i class="uil uil-times header__icon"></i>
+          </header>
+          <form action="#" class="add-note__form">
+            <div class="row title">
+              <label>Title</label>
+              <input type="text" spellcheck="false" />
+            </div>
+            <div class="row description">
+              <label>Description</label>
+              <textarea spellcheck="false"></textarea>
+            </div>
+            <button>Add Memory</button>
+          </form>
+        </div>
+      </div>
+    </main>
   </body>
 </html>
