@@ -28,7 +28,7 @@ li {
 html {
   font-size: 62.5%;
   @media only screen and (max-width: 660px) {
-    /* font-size: 50%; */
+    font-size: 50%;
   }
 }
 
@@ -75,7 +75,7 @@ body {
   @media only screen and (max-width: 660px) {
     /* display: none; */
     position: absolute;
-    width: 100%;
+    width: 101%;
     height: 100%;
     left: 0;
   }
@@ -83,11 +83,13 @@ body {
 
 .history {
   background-color: var(--color-dark--2);
-  flex-basis: 48rem;
-  transform: translateX(-87%);
+  transform: translateX(-88%);
   transition: 1000ms all cubic-bezier(0.19, 1, 0.22, 1);
   z-index: 1002;
+  width: 150%;
   @media only screen and (max-width: 660px) {
+    transform: translateX(-89%);
+    background-color: rgb(66, 66, 66, 0.96);
   }
 }
 
@@ -102,7 +104,7 @@ body {
   cursor: pointer;
   position: absolute;
   right: 0;
-  width: 6.4rem;
+  width: 5.6rem;
   height: 100%;
   background-color: var(--color-brand--3);
   @media only screen and (max-width: 660px) {
@@ -114,16 +116,18 @@ body {
 }
 
 .hamburger {
-  width: 3.5rem;
-  height: 3rem;
+  width: 35px;
+  height: 30px;
   position: relative;
   cursor: pointer;
   display: inline-block;
-  right: 1.4rem;
+  right: 1.2rem;
   position: absolute;
-  margin-top: -1rem;
+  margin-top: -10px;
   @media only screen and (max-width: 660px) {
     right: 0.8rem;
+    height: 24px;
+    width: 32px;
   }
 }
 
@@ -146,6 +150,9 @@ body {
   display: block;
   top: 13px;
   left: 0px;
+  @media only screen and (max-width: 660px) {
+    top: 10px;
+  }
 }
 .line3 {
   width: 100%;
@@ -162,6 +169,10 @@ body {
   transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
   /* transform: rotate(90deg); */
   transition-delay: 300ms;
+  @media only screen and (max-width: 660px) {
+    left: 4px;
+    width: 24px;
+  }
 }
 
 .hamburger.open .line1 {
@@ -171,6 +182,10 @@ body {
   transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
   transform: rotate(45deg);
   transition-delay: 100ms;
+  @media only screen and (max-width: 660px) {
+    width: 16px;
+    top: 16.5px;
+  }
 }
 .hamburger.open .line3 {
   left: 1px;
@@ -179,6 +194,11 @@ body {
   transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
   transform: rotate(-45deg);
   transition-delay: 200ms;
+  @media only screen and (max-width: 660px) {
+    width: 16px;
+    top: 7px;
+    /* top: 10px; */
+  }
 }
 
 /*** History content ***/
@@ -192,7 +212,7 @@ body {
   gap: 1.6rem;
   flex-direction: column;
   @media only screen and (max-width: 660px) {
-    /* padding: 2.4rem 6.8rem 2.4rem 1.2rem; */
+    padding: 2.4rem 6.8rem 2.4rem 1.2rem;
   }
 }
 
@@ -517,21 +537,24 @@ header,
   z-index: 1000;
   position: absolute;
   display: flex;
-  width: 40rem;
+  width: 41rem;
   height: 100%;
-  left: 7.2rem;
-  justify-content: center;
+  left: 6.4rem;
+  justify-content: flex-end;
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
   transition: all 0.25s ease;
+  @media only screen and (max-width: 660px) {
+    justify-content: center;
+  }
 }
 
 .note-container.show {
   opacity: 1;
   pointer-events: auto;
   @media only screen and (max-width: 660px) {
-    left: 4.8rem;
+    left: 5rem;
     width: calc(100% - 4.8rem);
   }
 }
@@ -541,6 +564,7 @@ header,
   background: #fff;
   width: calc(100% - 15px);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.4rem;
 }
 .add-note__header {
   padding: 8px 25px;
@@ -557,6 +581,9 @@ header,
 }
 .add-note__form {
   margin: 15px 25px 35px;
+  @media only screen and (max-width: 660px) {
+    /* margin: 15px 12px 35px; */
+  }
 }
 .add-note__form .row {
   margin-bottom: 12px;
@@ -579,7 +606,7 @@ header,
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.11);
 }
 .add-note__form .row textarea {
-  height: 150px;
+  height: 24rem;
   resize: none;
   padding: 8px 15px;
 }
