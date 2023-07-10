@@ -20,7 +20,7 @@
 
     <link
       rel="stylesheet"
-      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+      href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"
     />
     <link
       rel="stylesheet"
@@ -79,7 +79,7 @@
                   </a>
                 </li>
                 <li class="search-menu__option search-menu__option--sort">
-                  <a class="search-menu__link sort selected" href="#">
+                  <a class="search-menu__link sort" href="#">
                     <i class="uil uil uil-sort-amount-down"></i>
                     <span>Sort (Time)</span>
                   </a>
@@ -111,29 +111,10 @@
 
             <li class="add-box">
               <div class="icon"><i class="uil uil-plus"></i></div>
-              <p class="add-box__text">Add new note</p>
+              <p class="add-box__text">Add new memory</p>
             </li>
 
-            <li class="note">
-              <div class="details">
-                <p class="note__title">${note.title}</p>
-                <span class="note__desc">${filterDesc}</span>
-              </div>
-              <div class="bottom-content">
-                <span class="note__date">${note.date}</span>
-                <div class="settings show">
-                  <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
-                  <ul class="menu">
-                    <li class="menu__option">
-                      <i class="uil uil-pen menu__icon"></i>Edit
-                    </li>
-                    <li class="menu__option">
-                      <i class="uil uil-trash"></i>Delete
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </li>
+            <ul class="notes"></ul>
           </div>
 
           <svg
@@ -158,7 +139,7 @@
 
       <div id="map"></div>
 
-      <div class="note-container show">
+      <div class="note-container">
         <div class="add-note">
           <header class="add-note__header">
             <p class="header__title">Add new note</p>
@@ -167,11 +148,18 @@
           <form action="#" class="add-note__form">
             <div class="row title">
               <label>Title</label>
-              <input type="text" spellcheck="false" />
+              <input
+                type="text"
+                spellcheck="false"
+                class="add-note__input--title"
+              />
             </div>
             <div class="row description">
               <label>Description</label>
-              <textarea spellcheck="false"></textarea>
+              <textarea
+                spellcheck="false"
+                class="add-note__input--desc"
+              ></textarea>
             </div>
             <button>Add Memory</button>
           </form>

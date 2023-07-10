@@ -68,6 +68,21 @@ body {
   }
 }
 
+.leaflet-popup .leaflet-popup-content-wrapper {
+  background-color: var(--color-dark--1);
+  color: var(--color-light--2);
+  border-radius: 5px;
+  padding-right: 0.6rem;
+}
+
+.leaflet-popup .leaflet-popup-content {
+  font-size: 1.5rem;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+  background-color: var(--color-dark--1);
+}
+
 .sidebar {
   flex-basis: 48rem;
   position: relative;
@@ -216,6 +231,12 @@ body {
   }
 }
 
+.notes {
+  display: flex;
+  gap: 1.6rem;
+  flex-direction: column;
+}
+
 #blob {
   top: 0;
   z-index: 1001;
@@ -323,7 +344,6 @@ header,
 
 .search-menu-sort {
   font-size: 1.6rem;
-  color: var(--color-light--2);
   margin: 0;
   position: absolute;
   top: calc(100% + 0.8rem);
@@ -336,9 +356,12 @@ header,
   box-shadow: 0rem 1rem 1rem -0.5rem rgba(0 0 0 / 50%);
   opacity: 0;
   pointer-events: none;
+  transform: translateY(-30%);
+  transition: all 0.2s ease-out;
 }
 
 .search-menu__link.selected + .search-menu-sort {
+  transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
 }
@@ -352,14 +375,14 @@ header,
   text-decoration: none;
   display: block;
   padding: 0.5rem 1rem;
-  color: var(--color-dark--2);
+  color: var(--color-brand--3);
   font-weight: 500;
   transition: all 0.2s;
 }
 
 .search-menu-sort__option:hover,
 .search-menu-sort__option:active {
-  color: var(--color-light--1);
+  color: var(--color-dark--2);
   background-color: var(--color-light--4);
 }
 /*****************************/
@@ -381,6 +404,10 @@ header,
   flex-direction: column;
   justify-content: center;
   transition: all 0.2s;
+}
+
+.add-box.hide {
+  display: none;
 }
 
 .add-box .icon {
