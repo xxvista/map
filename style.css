@@ -226,6 +226,7 @@ body {
   display: flex;
   gap: 1.6rem;
   flex-direction: column;
+  overflow-y: scroll;
   @media only screen and (max-width: 660px) {
     padding: 2.4rem 6.8rem 2.4rem 1.2rem;
   }
@@ -360,7 +361,7 @@ header,
   transition: all 0.2s ease-out;
 }
 
-.search-menu__link.selected + .search-menu-sort {
+.search-menu-sort.selected {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
@@ -487,7 +488,7 @@ header,
   cursor: pointer;
   font-size: 15px;
 }
-.settings .menu {
+.settings .settings__menu {
   bottom: 0;
   right: -5px;
   padding: 5px 0;
@@ -500,7 +501,7 @@ header,
   transition: transform 0.2s ease;
 }
 
-.settings.show .menu {
+.settings.show .settings__menu {
   transform: scale(1);
 }
 

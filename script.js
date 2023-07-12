@@ -18,6 +18,14 @@ const history = document.querySelector('.history__content');
 const addNewMemory = document.querySelector('.add-box');
 const searchMenu = document.querySelector('.search-menu');
 const searchMenuLinks = document.querySelectorAll('.search-menu__link');
+const sortMenu = document.querySelector('.search-menu-sort');
+const sortDate = document.querySelector('.search-menu-sort__option--date');
+const sortTitle = document.querySelector('.search-menu-sort__option--title');
+const editNote = document.querySelectorAll('.menu__option--edit');
+const deleteNote = document.querySelectorAll('.menu__option--delete');
+const sortChoice = document.querySelector('.sort-choice');
+let dotsSettings;
+let settings;
 
 class Memory {
   date = new Date();
@@ -41,7 +49,6 @@ class Memory {
     this.subtitle = `${this.title[0].toUpperCase()}${this.title.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
-    console.log(this.subtitle);
   }
 }
 
@@ -52,6 +59,8 @@ class App {
   #mapEvent;
   #memories = [];
   #mapZoomLevel = 13;
+  #memoryMarkers = [];
+  #userCoords = [];
 
   constructor() {
     // Get user's position
@@ -68,6 +77,12 @@ class App {
     addNewMemory.addEventListener('click', this.#showForm.bind(this));
 
     searchMenu.addEventListener('click', this.#searchOptions.bind(this));
+
+    sortDate.addEventListener('click', this.#sortDate.bind(this));
+
+    sortTitle.addEventListener('click', this.#sortTitle.bind(this));
+
+    searchInput.addEventListener('keydown', this.#search.bind(this));
   }
 
   #getposition() {
@@ -83,6 +98,9 @@ class App {
   #loadMap(position) {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
+    // Saving the initial coords of the user
+    this.#userCoords[0] = latitude;
+    this.#userCoords[1] = longitude;
     //  console.log(`https://www.google.co.uk/maps/@${latitude},${longitude}`);
     const coords = [latitude, longitude];
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
@@ -95,7 +113,14 @@ class App {
     // Handling clicks on map
     this.#map.on('click', this.#showForm.bind(this));
 
-    this.#memories.forEach(memo => {
+    // Update map
+    this.#update(this.#memories);
+
+    this.#showAll();
+  }
+
+  #update(memories) {
+    memories.forEach(memo => {
       this.#renderMemoryMarker(memo);
     });
   }
@@ -126,6 +151,33 @@ class App {
     hamburger.classList.remove('open');
     menu.classList.remove('expanded');
     menuExpanded = false;
+  }
+
+  #showMenuEditor(e) {
+    console.log('click');
+
+    const elem = e.target;
+    elem.parentElement.classList.add('show');
+    document.addEventListener('click', e => {
+      if (!e.target.classList.contains('menu__option') && e.target !== elem) {
+        elem.parentElement.classList.remove('show');
+      }
+    });
+
+    // console.log(e.target);
+    // const editorEl = e.target.closest('.settings');
+
+    // if (!editorEl) return;
+
+    // editorEl.classList.add('show');
+
+    // setTimeout(() => {
+    //   document.addEventListener('click', e => {
+    //     if (e.target.tagName !== 'i' || e.target !== editorEl) {
+    //       editorEl.classList.remove('show');
+    //     }
+    //   });
+    // }, 1000);
   }
 
   #hideAddNewMemory() {
@@ -182,40 +234,40 @@ class App {
   }
 
   #renderMemoryMarker(memory) {
-    L.marker(memory.coords, {
+    const marker = L.marker(memory.coords, {
       riseOnHover: true,
       title: 'Marker',
       opacity: 0.8,
-    })
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 320,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: `marker-popup`,
-        })
-      )
-      .setPopupContent(`📝 ${memory.subtitle}`)
-      .openPopup();
+    }).addTo(this.#map);
+
+    const popup = L.popup({
+      maxWidth: 320,
+      minWidth: 100,
+      autoClose: false,
+      closeOnClick: false,
+      className: `marker-popup`,
+    }).setContent(`📝 ${memory.subtitle}`);
+    marker.bindPopup(popup).openPopup();
+
+    this.#memoryMarkers.push(marker);
   }
 
   #renderMemory(memory) {
+    let filterDesc = memory.description.replaceAll('\n', '<br/>');
     let html = `<li class="note" data-id="${memory.id}">
     <div class="details">
       <p class="note__title">${memory.title}</p>
-      <span class="note__desc">${memory.description}</span>
+      <span class="note__desc">${filterDesc}</span>
     </div>
     <div class="bottom-content">
       <span class="note__date">${memory.dateFormat}</span>
-      <div class="settings show">
-        <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
-        <ul class="menu">
-          <li class="menu__option">
+      <div class="settings">
+        <i class="uil uil-ellipsis-h"></i>
+        <ul class="settings__menu">
+          <li class="menu__option menu__option--edit">
             <i class="uil uil-pen menu__icon"></i>Edit
           </li>
-          <li class="menu__option">
+          <li class="menu__option menu__option--delete">
             <i class="uil uil-trash"></i>Delete
           </li>
         </ul>
@@ -224,15 +276,30 @@ class App {
   </li>`;
 
     notes.insertAdjacentHTML('afterbegin', html);
+
+    // dotsSettings = document.querySelectorAll('.uil-ellipsis-h');
+    // dotsSettings.forEach(dot => {
+    //   console.log(dot);
+    //   dot.addEventListener('click', this.#showMenuEditor.bind(this));
+    // });
+    document
+      .querySelector('.uil-ellipsis-h')
+      .addEventListener('click', this.#showMenuEditor.bind(this));
+
+    document
+      .querySelector('.menu__option--delete')
+      .addEventListener('click', this.#deleteNote.bind(this));
+
+    document
+      .querySelector('.menu__option--edit')
+      .addEventListener('click', this.#editNote.bind(this));
   }
 
   #moveToPopup(e) {
+    const check = e.target.closest('.settings__menu');
     const memoryEl = e.target.closest('.note');
-    console.log(memoryEl);
 
-    if (!memoryEl) return;
-
-    console.log(memoryEl.dataset.id);
+    if (!memoryEl || check) return;
 
     const memory = this.#memories.find(memo => memo.id === memoryEl.dataset.id);
 
@@ -274,6 +341,143 @@ class App {
 
     searchMenuLinks.forEach(el => el.classList.remove('selected'));
     searchEl.classList.add('selected');
+
+    if (searchEl.classList.contains('delete-all')) return this.#deleteAll();
+    if (searchEl.classList.contains('show-all')) return this.#showAll();
+    if (searchEl.classList.contains('sort')) return this.#sortMenu();
+  }
+
+  #deleteAll() {
+    console.log('deleteAll');
+  }
+
+  #showAll() {
+    const group = new L.featureGroup(this.#memoryMarkers);
+    this.#map.fitBounds(group.getBounds());
+  }
+
+  #sortMenu() {
+    sortMenu.classList.toggle('selected');
+    document.addEventListener('click', e => {
+      if (sortMenu.classList.contains('selected'))
+        if (
+          e.target.parentElement.parentElement.parentElement !== sortMenu &&
+          !e.target.classList.contains('sort')
+        ) {
+          sortMenu.classList.toggle('selected');
+        }
+    });
+  }
+
+  #deleteNote(e) {
+    // Identification of the workout that has to be deleted
+    const el = e.target.closest('.note');
+
+    // Delete marker from Markers UI and workoutMarkers array
+    const memoryCoords = this.#memories.find(
+      workout => workout.id === el.dataset.id
+    ).coords;
+
+    const markerIndex = this.#memoryMarkers.findIndex(marker => {
+      return (
+        marker._latlng.lat === memoryCoords[0] &&
+        marker._latlng.lng === memoryCoords[1]
+      );
+    });
+
+    this.#map.removeLayer(this.#memoryMarkers[markerIndex]); // Delete from UI
+    this.#memoryMarkers.splice(markerIndex, 1); // Delete from workouMarkers Array
+
+    // Delete workout from workout Arrays
+    this.#memories = this.#memories.filter(memo => {
+      return memo.id !== el.dataset.id;
+    });
+
+    // Delete workout from list in UI
+    el.remove();
+
+    // Checking if the workout array is empty or not, If it is, this function will disable all menu links
+    this.#checkMemories();
+
+    // Updating localStorage or resetting it if there are no more workouts
+    if (this.#memories.length !== 0) {
+      this.#setLocalStorage(); // Will overwrite the previous 'workout' item
+    } else {
+      localStorage.removeItem('memories');
+      addNewMemory.classList.remove('hide');
+
+      // Also, if we delete the last workout, the map should be positioned on user's initial coords
+      this.#map.setView(this.#userCoords, this.#mapZoomLevel, {
+        animate: true,
+        duration: 1.2,
+      });
+    }
+  }
+
+  #checkMemories() {
+    if (this.#memories.length === 0) {
+      document.querySelectorAll('.menu__link').forEach(link => {
+        link.classList.add('disabled');
+      });
+    } else {
+      document.querySelectorAll('.menu__link').forEach(link => {
+        link.classList.remove('disabled');
+      });
+    }
+  }
+
+  #editNote() {}
+
+  #sortDate(e) {
+    // Sorting by date (default)
+    e.preventDefault();
+
+    // Hiding the sort menu
+    sortMenu.classList.remove('selected');
+
+    // Doing the sort (date is default, no need to pass the string 'date') to _sortWorkouts()
+    this.#sortMemories();
+  }
+
+  #sortTitle(e) {
+    // Sorting by title
+    e.preventDefault();
+    // Hiding the sort menu
+    sortMenu.classList.remove('selected');
+
+    // Doing the sort
+    this.#sortMemories('title');
+  }
+
+  #sortMemories(option = 'date') {
+    // Changing the visual text on the sort link
+    sortChoice.textContent = option;
+
+    document.querySelectorAll('.note').forEach(el => el.remove());
+
+    console.log(this.#memories);
+    this.#memories
+      .slice()
+      .sort((a, b) => {
+        if (option === 'date') return a[option] - b[option];
+        if (option === 'title') {
+          if (a[option] > b[option]) {
+            return -1;
+          }
+          if (a[option] < b[option]) {
+            return 1;
+          }
+          return 0;
+        }
+      })
+      .forEach(memory => {
+        this.#renderMemory(memory);
+      });
+    console.log(this.#memories);
+  }
+
+  #search() {
+    console.log('search');
   }
 
   reset() {
