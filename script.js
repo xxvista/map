@@ -85,7 +85,11 @@ class App {
 
     sortTitle.addEventListener('click', this.#sortTitle.bind(this));
 
-    searchInput.addEventListener('keydown', this.#search.bind(this));
+    searchInput.addEventListener('input', this.#search.bind(this));
+
+    closeSearch.addEventListener('click', this.#closeSearch);
+
+    closeForm.addEventListener('click', this.#closeForm);
   }
 
   #getposition() {
@@ -119,6 +123,7 @@ class App {
     // Update map
     this.#update(this.#memories);
 
+    // show all previous markers when map first loads
     this.#showAll();
   }
 
@@ -169,21 +174,6 @@ class App {
         elem.parentElement.classList.remove('show');
       }
     });
-
-    // console.log(e.target);
-    // const editorEl = e.target.closest('.settings');
-
-    // if (!editorEl) return;
-
-    // editorEl.classList.add('show');
-
-    // setTimeout(() => {
-    //   document.addEventListener('click', e => {
-    //     if (e.target.tagName !== 'i' || e.target !== editorEl) {
-    //       editorEl.classList.remove('show');
-    //     }
-    //   });
-    // }, 1000);
   }
 
   #hideAddNewMemory() {
@@ -210,15 +200,8 @@ class App {
     const { lat, lng } = this.#mapEvent.latlng;
     let memory;
 
-    // If memory running, create running object
-
     // Check if data is valid
-    if (
-      //   !Number.isFinite(distance) ||
-      //   !Number.isFinite(duration) ||
-      //   !Number.isFinite(cadence)
-      !validInput(title, description)
-    )
+    if (!validInput(title, description))
       return alert('Inputs have to be positive number');
 
     memory = new Memory([lat, lng], title, description);
@@ -311,11 +294,6 @@ class App {
 
     notes.insertAdjacentHTML('afterbegin', html);
 
-    // dotsSettings = document.querySelectorAll('.uil-ellipsis-h');
-    // dotsSettings.forEach(dot => {
-    //   console.log(dot);
-    //   dot.addEventListener('click', this.#showMenuEditor.bind(this));
-    // });
     document
       .querySelector('.uil-ellipsis-h')
       .addEventListener('click', this.#showMenuEditor.bind(this));
@@ -382,9 +360,11 @@ class App {
   }
 
   #deleteAll() {
+    if (this.#memories.length === 0) return;
     let confirmDel = confirm('Are you sure you want to delete all notes?');
     if (!confirmDel) return;
-    this.reset();
+    localStorage.removeItem('memories');
+    location.reload();
   }
 
   #showAll() {
@@ -405,7 +385,7 @@ class App {
   #deleteNote(e) {
     let confirmDel = confirm('Are you sure you want to delete this note?');
     if (!confirmDel) return;
-    // Identification of the workout that has to be deleted
+
     const el = e.target.closest('.note');
 
     // Delete marker from Markers UI and workoutMarkers array
@@ -423,15 +403,14 @@ class App {
     this.#map.removeLayer(this.#memoryMarkers[markerIndex]); // Delete from UI
     this.#memoryMarkers.splice(markerIndex, 1); // Delete from workouMarkers Array
 
-    // Delete workout from workout Arrays
+    // Delete memory from workout Arrays
     this.#memories = this.#memories.filter(memo => {
       return memo.id !== el.dataset.id;
     });
 
-    // Delete workout from list in UI
+    // Delete memory from list in UI
     el.remove();
 
-    // Checking if the workout array is empty or not, If it is, this function will disable all menu links
     this.#checkMemories();
 
     // Updating localStorage or resetting it if there are no more workouts
@@ -522,8 +501,27 @@ class App {
     console.log(this.#memories);
   }
 
-  #search() {
-    console.log('search');
+  #search(e) {
+    const value = e.target.value.toLowerCase();
+    if (value !== '') closeSearch.classList.add('visible');
+    if (value === '') closeSearch.classList.remove('visible');
+    this.#memories.forEach(user => {
+      const isVisible =
+        user.title.toLowerCase().includes(value) ||
+        user.description.toLowerCase().includes(value);
+      const memory = notes.querySelector(`[data-id="${user.id}"]`);
+      memory.classList.toggle('hide', !isVisible);
+    });
+  }
+
+  #closeForm() {
+    noteContainer.classList.remove('show');
+  }
+
+  #closeSearch() {
+    searchInput.value = '';
+    searchInput.focus();
+    closeSearch.classList.remove('visible');
   }
 
   reset() {
@@ -533,23 +531,6 @@ class App {
 }
 
 const app = new App();
-
-////////////////////////////////////////////////////////////////
-
-searchInput.addEventListener('keyup', () => {
-  if (searchInput.value !== '') closeSearch.classList.add('visible');
-  if (searchInput.value === '') closeSearch.classList.remove('visible');
-});
-
-closeSearch.addEventListener('click', () => {
-  searchInput.value = '';
-  searchInput.focus();
-  closeSearch.classList.remove('visible');
-});
-
-closeForm.addEventListener('click', () => {
-  noteContainer.classList.remove('show');
-});
 
 ////////////////////////////////////////////////////////////////
 
