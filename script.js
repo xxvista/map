@@ -8,7 +8,8 @@ const innerMenu = document.querySelector('.history__content');
 const hamContainer = document.querySelector('.hamburger-container');
 const noteContainer = document.querySelector('.note-container');
 const searchInput = document.querySelector('.search__input');
-const removeIcon = document.querySelector('.search__close');
+const closeSearch = document.querySelector('.search__close');
+const closeForm = document.querySelector('.header__icon');
 
 const form = document.querySelector('.note-container');
 const submitBtn = document.querySelector('.submit');
@@ -536,14 +537,18 @@ const app = new App();
 ////////////////////////////////////////////////////////////////
 
 searchInput.addEventListener('keyup', () => {
-  if (searchInput.value !== '') removeIcon.classList.add('visible');
-  if (searchInput.value === '') removeIcon.classList.remove('visible');
+  if (searchInput.value !== '') closeSearch.classList.add('visible');
+  if (searchInput.value === '') closeSearch.classList.remove('visible');
 });
 
-removeIcon.addEventListener('click', () => {
+closeSearch.addEventListener('click', () => {
   searchInput.value = '';
   searchInput.focus();
-  removeIcon.classList.remove('visible');
+  closeSearch.classList.remove('visible');
+});
+
+closeForm.addEventListener('click', () => {
+  noteContainer.classList.remove('show');
 });
 
 ////////////////////////////////////////////////////////////////
