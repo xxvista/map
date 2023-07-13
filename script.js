@@ -11,6 +11,7 @@ const searchInput = document.querySelector('.search__input');
 const removeIcon = document.querySelector('.search__close');
 
 const form = document.querySelector('.note-container');
+const submitBtn = document.querySelector('.submit');
 const notes = document.querySelector('.notes');
 const inputTitle = document.querySelector('.add-note__input--title');
 const inputDesc = document.querySelector('.add-note__input--desc');
@@ -25,7 +26,8 @@ const editNote = document.querySelectorAll('.menu__option--edit');
 const deleteNote = document.querySelectorAll('.menu__option--delete');
 const sortChoice = document.querySelector('.sort-choice');
 let dotsSettings;
-let settings;
+let settings, currentId;
+let defaultUpdate = true;
 
 class Memory {
   date = new Date();
@@ -70,7 +72,7 @@ class App {
     this.#getLocalStorage();
 
     // Attach event handlers
-    form.addEventListener('submit', this.#newMemory.bind(this));
+    form.addEventListener('submit', this.#submit.bind(this));
 
     notes.addEventListener('click', this.#moveToPopup.bind(this));
 
@@ -126,6 +128,9 @@ class App {
   }
 
   #showForm(mapE) {
+    if (defaultUpdate) submitBtn.textContent = 'Add Memory';
+    else submitBtn.textContent = 'Update Memory';
+
     form.classList.add('show');
     inputTitle.focus();
     this.#hideMenu();
@@ -184,6 +189,12 @@ class App {
     addNewMemory.classList.add('hide');
   }
 
+  #submit(e) {
+    e.preventDefault();
+    if (defaultUpdate) this.#newMemory(e);
+    if (!defaultUpdate) this.#updateMemory(e);
+  }
+
   #newMemory(e) {
     const validInput = (...inputs) => inputs.every(inp => !inp !== '');
 
@@ -223,13 +234,35 @@ class App {
     // Hide form and Clear input fields
     this.#hideForm();
 
-    // expan menu
+    // expand menu
     this.#showMenu();
 
     // hide add new note
     this.#hideAddNewMemory();
 
     // Set local storage to all memorys
+    this.#setLocalStorage();
+  }
+
+  #updateMemory(e) {
+    console.log(currentId);
+    const noteUpdated = document.querySelector(`[data-id="${currentId}"]`);
+    const memory = this.#memories.find(memory => memory.id === currentId);
+
+    this.#showForm(e);
+    memory.title = noteUpdated.querySelector('.note__title').textContent =
+      inputTitle.value;
+    memory.description = inputDesc.value;
+    noteUpdated.querySelector('.note__desc').innerHTML =
+      memory.description.replaceAll('\n', '<br/>');
+
+    defaultUpdate = true;
+
+    // Hide form and Clear input fields
+    this.#hideForm();
+    // expand menu
+    this.#showMenu();
+
     this.#setLocalStorage();
   }
 
@@ -348,7 +381,9 @@ class App {
   }
 
   #deleteAll() {
-    console.log('deleteAll');
+    let confirmDel = confirm('Are you sure you want to delete all notes?');
+    if (!confirmDel) return;
+    this.reset();
   }
 
   #showAll() {
@@ -360,16 +395,15 @@ class App {
     sortMenu.classList.toggle('selected');
     document.addEventListener('click', e => {
       if (sortMenu.classList.contains('selected'))
-        if (
-          e.target.parentElement.parentElement.parentElement !== sortMenu &&
-          !e.target.classList.contains('sort')
-        ) {
+        if (!e.target.closest('.sort')) {
           sortMenu.classList.toggle('selected');
         }
     });
   }
 
   #deleteNote(e) {
+    let confirmDel = confirm('Are you sure you want to delete this note?');
+    if (!confirmDel) return;
     // Identification of the workout that has to be deleted
     const el = e.target.closest('.note');
 
@@ -426,7 +460,18 @@ class App {
     }
   }
 
-  #editNote() {}
+  #editNote(e) {
+    const item = e.target.closest('.note');
+
+    currentId = item.dataset.id;
+    const memory = this.#memories.find(memory => memory.id === currentId);
+
+    inputTitle.value = memory.title;
+    inputDesc.value = memory.description;
+    defaultUpdate = false;
+
+    this.#showForm(e);
+  }
 
   #sortDate(e) {
     // Sorting by date (default)
